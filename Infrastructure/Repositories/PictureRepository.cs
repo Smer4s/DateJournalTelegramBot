@@ -5,7 +5,7 @@ namespace DateJournal.Infrastructure.Repositories
 	public class PictureRepository
 	{
 		private readonly string _path;
-		public PictureRepository()
+		private PictureRepository()
 		{
 			_path = Path.Combine(Directory.GetCurrentDirectory(), "pictures");
 
@@ -18,6 +18,11 @@ namespace DateJournal.Infrastructure.Repositories
 					Directory.CreateDirectory(path);
 				}
 			}
+		}
+
+		public static PictureRepository Create()
+		{
+			return new PictureRepository();
 		}
 
 		public FileStream SavePicture(string username, string id, out string path)

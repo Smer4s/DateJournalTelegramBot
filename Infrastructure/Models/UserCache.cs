@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DateJournal.Infrastructure.Models
 {
-	public class UserCache
+	public class UserCache : BaseEntity
 	{
 		public string? UserName {  get; set; }
 		public bool IsStory { get; set; } = false;

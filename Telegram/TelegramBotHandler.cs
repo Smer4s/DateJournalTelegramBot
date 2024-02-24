@@ -11,23 +11,18 @@ namespace DateJournal.Telegram
 {
 	public class TelegramBotHandler : IUpdateHandler
 	{
-		readonly UserCache[] userCaches = new[]
+		List<UserCache> userCaches = new()
 		{
-			new UserCache
-			{
-				UserName = "nikitastud",
-			},
-			new UserCache
-			{
-				UserName = "neitema"
-			}
+			new () { UserName = "nikitastud" },
+			new () { UserName = "neitema" }
 		};
 
 		Dictionary<string, Guid> sessions = new Dictionary<string, Guid>();
 
 		List<Story>? stories;
 		readonly StoryRepository storyRepository = StoryRepository.Create();
-		readonly PictureRepository pictureRepository = new();
+		readonly PictureRepository pictureRepository = PictureRepository.Create();
+		readonly CacheRepository cacheRepository = CacheRepository.Create();
 
 		public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception error, CancellationToken cancellationToken)
 		{
@@ -64,6 +59,7 @@ namespace DateJournal.Telegram
 					return;
 				}
 
+				await cacheRepository.GetCache(userCaches);
 				var userCache = userCaches.GetByUserName(username);
 				switch (message.Type)
 				{
@@ -133,13 +129,16 @@ namespace DateJournal.Telegram
 					default:
 						break;
 				}
-
 			}
 			catch (Exception ex)
 			{
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine(ex.ToString());
 				Console.ForegroundColor = ConsoleColor.White;
+			}
+			finally
+			{
+				await cacheRepository.SaveCache(userCaches);
 			}
 		}
 
@@ -215,7 +214,7 @@ namespace DateJournal.Telegram
 
 		private async Task HandleCommand(ITelegramBotClient botClient, Chat chat, string text, string username, UserCache userCache, CancellationToken cancellationToken)
 		{
-			switch (text)
+			switch (text.ToLower())
 			{
 				case "/newstory":
 					await botClient.SendTextMessageAsync(
