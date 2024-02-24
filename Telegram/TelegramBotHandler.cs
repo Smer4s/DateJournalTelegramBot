@@ -182,6 +182,7 @@ namespace DateJournal.Telegram
 			var story = new Story
 			{
 				Created = DateOnly.FromDateTime(message.Date.AddHours(3)),
+				Time = TimeOnly.FromDateTime(message.Date.AddHours(3)),
 				Message = text,
 				IssuerUsername = username
 			};

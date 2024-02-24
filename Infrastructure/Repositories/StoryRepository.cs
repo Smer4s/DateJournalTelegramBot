@@ -17,8 +17,8 @@ namespace DateJournal.Infrastructure.Repositories
 		private StoryRepository(IMongoCollection<Story> collection) =>
 			_collection = collection;
 
-		public async Task<Story?> GetStory(DateOnly date) =>
-			await _collection.Find(story => story.Created == date).FirstOrDefaultAsync();
+		//public async Task<Story?> GetStory(DateOnly date) =>
+		//	await _collection.Find(story => story.Created == date).FirstOrDefaultAsync();
 
 		public async Task Create(Story story)
 			=> await _collection.InsertOneAsync(story);
