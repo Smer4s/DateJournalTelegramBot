@@ -6,6 +6,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using DateJournal.Extensions;
+using DateJournal.Utils;
 
 namespace DateJournal.Telegram
 {
@@ -247,12 +248,7 @@ namespace DateJournal.Telegram
 
 					await botClient.SendTextMessageAsync(
 						chat,
-						$"Итак, вы терпите друг друга уже" +
-						$"\n{(int)days.TotalDays} дней, или же" +
-						$"\n{(int)days.TotalHours} часов, или же" +
-						$"\n{(int)days.TotalMinutes} минут, или же" +
-						$"\n{(int)days.TotalSeconds} секунд 😏." +
-						$"\nЯ думаю этого дорогого стоит, вы молодцы, дерзайте дальше 😘😘😘",
+						days.GetDays(),
 						cancellationToken: cancellationToken);
 					break;
 				default:
